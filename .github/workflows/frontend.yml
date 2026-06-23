@@ -34,7 +34,7 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Run Angular tests
-        run: npm test -- --watch=false --browsers=ChromeHeadlessNoSandbox
+        run: npm test -- --watch=false
 
       - name: Build Angular app
         run: npm run build
