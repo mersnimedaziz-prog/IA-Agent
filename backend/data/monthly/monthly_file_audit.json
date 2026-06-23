@@ -1,0 +1,380 @@
+[
+  {
+    "original_filename": "jira_monthly_mock_data_2026_05.xlsx",
+    "file_hash": "f04908bd19000611a8f694a9067e56e8982630ee5bfecc9f1a92855c9874de61",
+    "active_file_path": "data/monthly\\active_monthly_data.xlsx",
+    "archived_file_path": "C:\\Users\\msi\\Desktop\\stage-ia\\backend\\data\\monthly\\imports\\20260615_093034_jira_monthly_mock_data_2026_05.xlsx",
+    "uploaded_at": "2026-06-15T09:30:34.777362",
+    "profile": {
+      "rows_count": 19,
+      "columns": [
+        "Date",
+        "Author",
+        "Role",
+        "Project",
+        "Parent Epic",
+        "Parent Epic Summary",
+        "Parent Ticket",
+        "Parent Summary",
+        "Ticket",
+        "Summary",
+        "Time (h)",
+        "Holiday",
+        "Status",
+        "Started",
+        "Weekend",
+        "Time_Hours"
+      ],
+      "total_hours": 75.0,
+      "min_date": "2026-04-30",
+      "max_date": "2026-06-01",
+      "by_role": {
+        "BE": 31.0,
+        "FE": 26.5,
+        "QA": 17.5
+      },
+      "by_author": {
+        "Aziz": 26.5,
+        "Nour": 17.5,
+        "Sami": 31.0
+      }
+    },
+    "upload_id": "8561bfec899805fe"
+  },
+  {
+    "original_filename": "jira_monthly_mock_data_2026_05 (1).xlsx",
+    "file_hash": "34f52fb652bcfe65478850c1f92028eb71c05d8f8abe8f998319f1708cf59f26",
+    "active_file_path": "data/monthly\\active_monthly_data.xlsx",
+    "archived_file_path": "C:\\Users\\msi\\Desktop\\stage-ia\\backend\\data\\monthly\\imports\\20260615_093051_jira_monthly_mock_data_2026_05 (1).xlsx",
+    "uploaded_at": "2026-06-15T09:30:51.375488",
+    "profile": {
+      "rows_count": 35,
+      "columns": [
+        "Date",
+        "Author",
+        "Role",
+        "Project",
+        "Parent Epic",
+        "Parent Epic Summary",
+        "Parent Ticket",
+        "Parent Summary",
+        "Ticket",
+        "Summary",
+        "Time (h)",
+        "Holiday",
+        "Status",
+        "Started",
+        "Weekend",
+        "Time_Hours"
+      ],
+      "total_hours": 147.0,
+      "min_date": "2026-04-30",
+      "max_date": "2026-06-01",
+      "by_role": {
+        "BE": 56.0,
+        "FE": 50.0,
+        "QA": 41.0
+      },
+      "by_author": {
+        "Aziz": 50.0,
+        "Nour": 41.0,
+        "Sami": 56.0
+      }
+    },
+    "upload_id": "7d1d8dff51aa5735"
+  },
+  {
+    "original_filename": "jira_monthly_mock_data_2026_03.xlsx",
+    "file_hash": "283ba3c997985e4536f3e076a38d2b73820b73f0fe82ec1898f9921827186e70",
+    "active_file_path": "data/monthly\\active_monthly_data.xlsx",
+    "archived_file_path": "C:\\Users\\msi\\Desktop\\stage-ia\\backend\\data\\monthly\\imports\\20260615_093111_jira_monthly_mock_data_2026_03.xlsx",
+    "uploaded_at": "2026-06-15T09:31:11.948510",
+    "profile": {
+      "rows_count": 51,
+      "columns": [
+        "Date",
+        "Author",
+        "Role",
+        "Project",
+        "Parent Epic",
+        "Parent Epic Summary",
+        "Parent Ticket",
+        "Parent Summary",
+        "Ticket",
+        "Summary",
+        "Time (h)",
+        "Holiday",
+        "Status",
+        "Started",
+        "Weekend",
+        "Time_Hours"
+      ],
+      "total_hours": 219.5,
+      "min_date": "2026-02-28",
+      "max_date": "2026-04-01",
+      "by_role": {
+        "BE": 75.5,
+        "FE": 79.0,
+        "QA": 65.0
+      },
+      "by_author": {
+        "Aziz": 79.0,
+        "Nour": 65.0,
+        "Sami": 75.5
+      }
+    },
+    "upload_id": "4267d1e59064171c"
+  },
+  {
+    "original_filename": "jira_monthly_mock_data_2026_04 (1).xlsx",
+    "file_hash": "23fd92cc147fc11c98488f34ddb9d8ce96bf0cb93d6ffaa1f56ce077df86c4af",
+    "active_file_path": "data/monthly\\active_monthly_data.xlsx",
+    "archived_file_path": "C:\\Users\\msi\\Desktop\\stage-ia\\backend\\data\\monthly\\imports\\20260615_102930_jira_monthly_mock_data_2026_04 (1).xlsx",
+    "uploaded_at": "2026-06-15T10:29:30.811705",
+    "profile": {
+      "rows_count": 60,
+      "columns": [
+        "Date",
+        "Author",
+        "Role",
+        "Project",
+        "Parent Epic",
+        "Parent Epic Summary",
+        "Parent Ticket",
+        "Parent Summary",
+        "Ticket",
+        "Summary",
+        "Time (h)",
+        "Holiday",
+        "Status",
+        "Started",
+        "Weekend",
+        "Time_Hours"
+      ],
+      "total_hours": 267.0,
+      "min_date": "2026-03-31",
+      "max_date": "2026-05-01",
+      "by_role": {
+        "BE": 97.0,
+        "FE": 95.0,
+        "QA": 75.0
+      },
+      "by_author": {
+        "Aziz": 95.0,
+        "Nour": 75.0,
+        "Sami": 97.0
+      }
+    },
+    "upload_id": "1f72d9bb24b6de60"
+  },
+  {
+    "original_filename": "jira_monthly_mock_data_2026_06.xlsx",
+    "file_hash": "855d06afccb079e6c1a3f993521724d66c19724b1fca4a912ac03b640336f04a",
+    "active_file_path": "data/monthly\\active_monthly_data.xlsx",
+    "archived_file_path": "C:\\Users\\msi\\Desktop\\stage-ia\\backend\\data\\monthly\\imports\\20260615_105327_jira_monthly_mock_data_2026_06.xlsx",
+    "uploaded_at": "2026-06-15T10:53:27.047824",
+    "profile": {
+      "rows_count": 23,
+      "columns": [
+        "Date",
+        "Author",
+        "Role",
+        "Project",
+        "Parent Epic",
+        "Parent Epic Summary",
+        "Parent Ticket",
+        "Parent Summary",
+        "Ticket",
+        "Summary",
+        "Time (h)",
+        "Holiday",
+        "Status",
+        "Started",
+        "Weekend",
+        "Time_Hours"
+      ],
+      "total_hours": 83.5,
+      "min_date": "2026-05-30",
+      "max_date": "2026-07-01",
+      "by_role": {
+        "BE": 32.5,
+        "FE": 31.0,
+        "QA": 20.0
+      },
+      "by_author": {
+        "Aziz": 31.0,
+        "Nour": 20.0,
+        "Sami": 32.5
+      }
+    },
+    "upload_id": "677a835d4471182c"
+  },
+  {
+    "original_filename": "jira_monthly_mock_data_2026_03 (1).xlsx",
+    "file_hash": "4909cea5487f210e5ff576de934e4bdc17d66bac764bd20c21faf2b91b2d4383",
+    "active_file_path": "data/monthly\\active_monthly_data.xlsx",
+    "archived_file_path": "C:\\Users\\msi\\Desktop\\stage-ia\\backend\\data\\monthly\\imports\\20260615_110528_jira_monthly_mock_data_2026_03 (1).xlsx",
+    "uploaded_at": "2026-06-15T11:05:28.707348",
+    "profile": {
+      "rows_count": 65,
+      "columns": [
+        "Date",
+        "Author",
+        "Role",
+        "Project",
+        "Parent Epic",
+        "Parent Epic Summary",
+        "Parent Ticket",
+        "Parent Summary",
+        "Ticket",
+        "Summary",
+        "Time (h)",
+        "Holiday",
+        "Status",
+        "Started",
+        "Weekend",
+        "Time_Hours"
+      ],
+      "total_hours": 286.5,
+      "min_date": "2026-02-28",
+      "max_date": "2026-04-01",
+      "by_role": {
+        "BE": 102.5,
+        "FE": 96.0,
+        "QA": 88.0
+      },
+      "by_author": {
+        "Aziz": 96.0,
+        "Nour": 88.0,
+        "Sami": 102.5
+      }
+    },
+    "upload_id": "531776f2ccf85a98"
+  },
+  {
+    "original_filename": "jira_monthly_mock_data_2026_06_modified.xlsx",
+    "file_hash": "1deae7397b6d090af6291533f26f6b0d61ad7c75dea21217a0cf754bf47be968",
+    "active_file_path": "data/monthly\\active_monthly_data.xlsx",
+    "archived_file_path": "C:\\Users\\msi\\Desktop\\stage-ia\\backend\\data\\monthly\\imports\\20260615_113306_jira_monthly_mock_data_2026_06_modified.xlsx",
+    "uploaded_at": "2026-06-15T11:33:06.736838",
+    "profile": {
+      "rows_count": 26,
+      "columns": [
+        "Date",
+        "Author",
+        "Role",
+        "Project",
+        "Parent Epic",
+        "Parent Epic Summary",
+        "Parent Ticket",
+        "Parent Summary",
+        "Ticket",
+        "Summary",
+        "Time (h)",
+        "Holiday",
+        "Status",
+        "Started",
+        "Weekend",
+        "Time_Hours"
+      ],
+      "total_hours": 96.0,
+      "min_date": "2026-05-30",
+      "max_date": "2026-07-01",
+      "by_role": {
+        "BE": 36.5,
+        "FE": 36.5,
+        "QA": 23.0
+      },
+      "by_author": {
+        "Aziz": 36.5,
+        "Nour": 23.0,
+        "Sami": 36.5
+      }
+    },
+    "upload_id": "9eb6e59f24a0768a"
+  },
+  {
+    "upload_id": "20260615_151906_34f52fb6",
+    "original_filename": "20260615_093051_jira_monthly_mock_data_2026_05 (1).xlsx",
+    "file_hash": "34f52fb652bcfe65478850c1f92028eb71c05d8f8abe8f998319f1708cf59f26",
+    "active_file_path": "data/monthly\\active_monthly_data.xlsx",
+    "archived_file_path": "C:\\Users\\msi\\Desktop\\stage-ia\\backend\\data\\monthly\\imports\\20260615_151906_20260615_093051_jira_monthly_mock_data_2026_05 (1).xlsx",
+    "uploaded_at": "2026-06-15T15:19:06.908099",
+    "profile": {
+      "rows_count": 35,
+      "columns": [
+        "Date",
+        "Author",
+        "Role",
+        "Project",
+        "Parent Epic",
+        "Parent Epic Summary",
+        "Parent Ticket",
+        "Parent Summary",
+        "Ticket",
+        "Summary",
+        "Time (h)",
+        "Holiday",
+        "Status",
+        "Started",
+        "Weekend",
+        "Time_Hours"
+      ],
+      "total_hours": 147.0,
+      "min_date": "2026-04-30",
+      "max_date": "2026-06-01",
+      "by_role": {
+        "BE": 56.0,
+        "FE": 50.0,
+        "QA": 41.0
+      },
+      "by_author": {
+        "Aziz": 50.0,
+        "Nour": 41.0,
+        "Sami": 56.0
+      }
+    }
+  },
+  {
+    "upload_id": "20260622_085929_8c4f3f87",
+    "original_filename": "jira_monthly_mock_data_2026_02.xlsx",
+    "file_hash": "8c4f3f879b4636899d75e4a0d101e4bba70351d401d0a8d5c5a723612dce0304",
+    "active_file_path": "data/monthly/active_monthly_data.xlsx",
+    "archived_file_path": "/app/data/monthly/imports/20260622_085929_jira_monthly_mock_data_2026_02.xlsx",
+    "uploaded_at": "2026-06-22T08:59:29.440365",
+    "profile": {
+      "rows_count": 81,
+      "columns": [
+        "Date",
+        "Author",
+        "Role",
+        "Project",
+        "Parent Epic",
+        "Parent Epic Summary",
+        "Parent Ticket",
+        "Parent Summary",
+        "Ticket",
+        "Summary",
+        "Time (h)",
+        "Holiday",
+        "Status",
+        "Started",
+        "Weekend",
+        "Time_Hours"
+      ],
+      "total_hours": 364.0,
+      "min_date": "2026-01-30",
+      "max_date": "2026-03-02",
+      "by_role": {
+        "BE": 132.0,
+        "FE": 128.0,
+        "QA": 104.0
+      },
+      "by_author": {
+        "Aziz": 128.0,
+        "Nour": 104.0,
+        "Sami": 132.0
+      }
+    }
+  }
+]

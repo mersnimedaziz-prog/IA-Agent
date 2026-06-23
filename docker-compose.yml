@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: agent_ia_backend
+    ports:
+      # Expose port 8082 on host mapped to 8000 in the container
+      - "8082:8000"
+    volumes:
+      # Mount the local data folder directly so history and files are preserved and accessible from Windows
+      - ./backend/data:/app/data
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  frontend:
+    build:
+      context: ./kpi-dashboard
+    container_name: agent_ia_frontend
+    ports:
+      # Expose port 4200 to match Keycloak's allowed redirect URIs (previously 4000:4000)
+      - "4200:4000"
+    restart: unless-stopped
+    environment:
+      # Tell the Angular SSR server to talk to the backend container internally
+      - API_URL=http://backend:8000
+    depends_on:
+      - backend

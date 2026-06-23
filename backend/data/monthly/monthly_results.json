@@ -1,0 +1,52 @@
+[
+  {
+    "month": "2026-03",
+    "compilation_date": "2026-03-01",
+    "kpi_name": "monthly_total_hours",
+    "value": 276.5,
+    "unit": "hours",
+    "type": "Result",
+    "total_md": 34.56,
+    "created_at": "2026-06-22T07:50:03.287331"
+  },
+  {
+    "month": "2026-06",
+    "compilation_date": "2026-06-01",
+    "kpi_name": "monthly_total_hours",
+    "value": 83.0,
+    "unit": "hours",
+    "type": "Result",
+    "total_md": 10.38,
+    "created_at": "2026-06-22T08:02:32.347531"
+  },
+  {
+    "month": "2026-04",
+    "compilation_date": "2026-04-01",
+    "kpi_name": "monthly_total_hours",
+    "value": 260.5,
+    "unit": "hours",
+    "type": "Result",
+    "total_md": 32.56,
+    "created_at": "2026-06-22T08:25:57.511428"
+  },
+  {
+    "month": "2026-05",
+    "compilation_date": "2026-05-01",
+    "kpi_name": "monthly_total_hours",
+    "value": 134.0,
+    "unit": "hours",
+    "type": "Result",
+    "total_md": 16.75,
+    "created_at": "2026-06-22T08:26:19.659026"
+  },
+  {
+    "month": "2026-02",
+    "compilation_date": "2026-02-01",
+    "kpi_name": "monthly_total_hours",
+    "value": 353.0,
+    "unit": "hours",
+    "type": "Result",
+    "total_md": 44.12,
+    "created_at": "2026-06-22T08:59:29.651243"
+  }
+]
