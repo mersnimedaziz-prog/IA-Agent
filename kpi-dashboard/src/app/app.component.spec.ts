@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 import { of } from 'rxjs';
 
 import { AuthService } from './auth.service';
-import { ApiService } from './api.service';
+import { DashboardApiService } from './services/dashboard-api.service';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -21,7 +21,7 @@ describe('AppComponent', () => {
     getRoles: vi.fn().mockReturnValue([])
   };
 
-  const apiServiceMock = {
+  const DashboardApiServiceMock = {
     getOllamaStatus: vi.fn().mockReturnValue(
       of({
         ollama_available: false
@@ -37,7 +37,7 @@ describe('AppComponent', () => {
       ],
       providers: [
         { provide: AuthService, useValue: authServiceMock },
-        { provide: ApiService, useValue: apiServiceMock },
+        { provide: DashboardApiService, useValue: DashboardApiServiceMock },
         { provide: PLATFORM_ID, useValue: 'browser' }
       ]
     }).compileComponents();
@@ -51,3 +51,5 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+

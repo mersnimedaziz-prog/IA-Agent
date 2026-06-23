@@ -7,7 +7,7 @@ import { vi } from 'vitest';
 
 import { HeaderComponent } from './header.component';
 import { AuthService } from '../../auth.service';
-import { ApiService } from '../../api.service';
+import { DashboardApiService } from '../../services/dashboard-api.service';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -22,7 +22,7 @@ describe('HeaderComponent', () => {
     getRoles: vi.fn().mockReturnValue([])
   };
 
-  const apiServiceMock = {
+  const DashboardApiServiceMock = {
     getOllamaStatus: vi.fn().mockReturnValue(
       of({
         ollama_available: false
@@ -43,8 +43,8 @@ describe('HeaderComponent', () => {
           useValue: authServiceMock
         },
         {
-          provide: ApiService,
-          useValue: apiServiceMock
+          provide: DashboardApiService,
+          useValue: DashboardApiServiceMock
         },
         {
           provide: PLATFORM_ID,
@@ -62,3 +62,4 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
