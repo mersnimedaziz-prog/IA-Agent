@@ -1,0 +1,41 @@
+.badge-success {
+  background-color: rgba(39, 174, 96, 0.15);
+  color: #166534;
+}
+
+.badge-danger {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: #991b1b;
+}
+
+.badge-neutral {
+  background-color: #e5e7eb;
+  color: #475569;
+}
+
+.file-validation-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+}
+
+.file-validation-card.validation-valid {
+  border-left: 4px solid #198754;
+  background-color: rgba(25, 135, 84, 0.05);
+}
+
+.file-validation-card.validation-invalid {
+  border-left: 4px solid #dc3545;
+  background-color: rgba(220, 53, 69, 0.05);
+}
+
+.validation-profile {
+  font-size: 0.95rem;
+  color: #495057;
+}
+
+.validation-errors ul, .validation-warnings ul {
+  padding-left: 1.25rem;
+}
+

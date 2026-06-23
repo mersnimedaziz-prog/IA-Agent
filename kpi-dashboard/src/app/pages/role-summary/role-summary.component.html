@@ -1,0 +1,111 @@
+<section>
+  <app-page-header title="Résumé par rôle" icon="bi-people" color="warning"></app-page-header>
+
+  <p class="page-description mb-4">
+    Visualisez les heures, les MD et les activités principales réalisées par chaque groupe/rôle.
+  </p>
+
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>Filtres</strong>
+      <button class="btn btn-sm btn-outline-secondary" (click)="showFilters = !showFilters">
+        <i class="bi" [ngClass]="showFilters ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+        {{ showFilters ? 'Cacher les filtres' : 'Afficher les filtres' }}
+      </button>
+    </div>
+    <div class="card-body" *ngIf="showFilters">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-2">
+          <label class="form-label">Mois</label>
+          <input class="form-control" type="month" [(ngModel)]="month" (change)="updateDateRangeFromMonth()" />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Date début</label>
+          <input class="form-control" type="date" [(ngModel)]="startDate" />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Date fin</label>
+          <input class="form-control" type="date" [(ngModel)]="endDate" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Fichier source</label>
+          <select class="form-select" [(ngModel)]="selectedUploadId">
+            <option *ngIf="monthlyUploads.length === 0" value="">Aucun fichier disponible</option>
+            <option *ngFor="let upload of monthlyUploads" [value]="upload.upload_id">
+              {{ upload.original_filename }} ({{ upload.uploaded_at | date:'dd/MM/yyyy HH:mm' }})
+            </option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100" type="button" (click)="loadRoleSummary()" [disabled]="isLoading || !selectedUploadId">
+            {{ isLoading ? 'Analyse en cours...' : 'Appliquer le filtre' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning mt-3" *ngIf="!selectedUploadId && monthlyUploads.length === 0">
+    Veuillez uploader un fichier Jira mensuel dans la page "Monthly Tracking & Targets" pour voir l'analyse.
+  </div>
+  <div class="alert alert-warning mt-3" *ngIf="!selectedUploadId && monthlyUploads.length > 0">
+    Veuillez sélectionner un fichier source avant d’appliquer le filtre.
+  </div>
+
+  <div class="alert alert-success mt-3" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="alert alert-danger mt-3" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="alert alert-info" *ngIf="isLoading">Chargement du résumé par rôle...</div>
+
+  <div class="row g-3 mb-4" *ngIf="!isLoading">
+    <div class="col-md-3"><div class="metric-box"><span>Période</span><strong>{{ startDate }} → {{ endDate }}</strong></div></div>
+    <div class="col-md-3"><div class="metric-box"><span>Total heures</span><strong>{{ totalHours }} h</strong></div></div>
+    <div class="col-md-3"><div class="metric-box"><span>Total MD</span><strong>{{ totalMd }}</strong></div></div>
+    <div class="col-md-3"><div class="metric-box"><span>Rôles analysés</span><strong>{{ totalRoles }}</strong></div></div>
+  </div>
+
+  <div class="card mb-4" *ngIf="!isLoading && byRole.length > 0">
+    <div class="card-header"><strong>Résultat par rôle</strong></div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped mb-0">
+          <thead>
+            <tr>
+              <th>Rôle</th>
+              <th>Total heures</th>
+              <th>Total MD</th>
+              <th>Tickets</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of byRole">
+              <td><span class="badge" [ngClass]="getRoleBadgeClass(row.Role)">{{ row.Role }}</span></td>
+              <td>{{ getRoleHours(row) }} h</td>
+              <td>{{ getRoleMd(row) }}</td>
+              <td>{{ getWorkSummaryForRole(row.Role)?.Tickets_Count || '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3" *ngIf="!isLoading && roleWorkSummary.length > 0">
+    <div class="col-md-6" *ngFor="let row of roleWorkSummary">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="badge" [ngClass]="getRoleBadgeClass(row.Role)">{{ row.Role }}</span>
+          <small>{{ row.Total_Hours }} h · {{ row.Total_MD }} MD · {{ row.Tickets_Count }} tickets</small>
+        </div>
+        <div class="card-body">
+          <ul class="mb-0">
+            <li *ngFor="let item of getWorkItems(row)">{{ item }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning" *ngIf="!isLoading && byRole.length === 0">
+    Aucun résumé par rôle disponible pour cette période.
+  </div>
+</section>

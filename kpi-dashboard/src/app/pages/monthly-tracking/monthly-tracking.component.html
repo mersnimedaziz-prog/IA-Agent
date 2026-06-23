@@ -1,0 +1,488 @@
+<section>
+  <app-page-header
+    title="Suivi Mensuel & Targets"
+    icon="bi-calendar-month"
+    color="warning"
+  ></app-page-header>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <p class="page-description mb-0">
+      Importez un fichier Jira mensuel, choisissez une période, définissez un objectif,
+      puis calculez et comparez le résultat du KPI.
+    </p>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>Import & calcul</strong>
+      <button class="btn btn-sm btn-outline-secondary" (click)="showFilters = !showFilters">
+        <i class="bi" [ngClass]="showFilters ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+        {{ showFilters ? 'Cacher les options' : 'Afficher les options' }}
+      </button>
+    </div>
+
+    <div class="card-body" *ngIf="showFilters">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label">Fichier Jira mensuel</label>
+          <input
+            class="form-control"
+            type="file"
+            accept=".xlsx,.xls"
+            (change)="onMonthlyFileSelected($event)"
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Mois</label>
+          <input
+            class="form-control"
+            type="month"
+            [(ngModel)]="monthlyMonth"
+            (change)="updateMonthlyDateRangeFromMonth()"
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Date début</label>
+          <input
+            class="form-control"
+            type="date"
+            [(ngModel)]="monthlyStartDate"
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Date fin</label>
+          <input
+            class="form-control"
+            type="date"
+            [(ngModel)]="monthlyEndDate"
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">KPI</label>
+          <select class="form-select" [(ngModel)]="monthlyKpiName">
+            <option value="monthly_total_hours">
+              Total Heures (monthly_total_hours)
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Objectif Target</label>
+          <input
+            class="form-control"
+            type="number"
+            [(ngModel)]="monthlyTargetValue"
+          />
+        </div>
+
+        <div class="col-12">
+          <button
+            class="btn btn-primary"
+            type="button"
+            (click)="uploadAndCalculateMonthlyKpi()"
+            [disabled]="isMonthlyUploading || isMonthlyCalculating"
+          >
+            {{
+              isMonthlyUploading
+                ? 'Import mensuel...'
+                : isMonthlyCalculating
+                  ? 'Calcul mensuel...'
+                  : 'Importer, calculer et sauvegarder'
+            }}
+          </button>
+        </div>
+      </div>
+
+      <div class="alert alert-success mt-3 mb-0" *ngIf="monthlyUploadMessage">
+        {{ monthlyUploadMessage }}
+      </div>
+
+      <div class="alert alert-danger mt-3 mb-0" *ngIf="monthlyErrorMessage">
+        {{ monthlyErrorMessage }}
+      </div>
+
+      <div
+        class="file-validation-card mt-3"
+        *ngIf="fileValidationResult"
+        [class.validation-valid]="fileValidationResult.is_valid"
+        [class.validation-invalid]="!fileValidationResult.is_valid"
+      >
+        <h4 class="fw-bold mb-3">
+          {{
+            fileValidationResult.is_valid
+              ? '✅ Structure Jira valide'
+              : '❌ Structure Jira invalide'
+          }}
+        </h4>
+
+        <div *ngIf="fileValidationResult.profile" class="validation-profile mb-3">
+          <p class="mb-1">
+            <strong>Onglet analysé :</strong>
+            {{ fileValidationResult.profile.sheet_name }}
+          </p>
+
+          <p class="mb-1">
+            <strong>Nombre de lignes :</strong>
+            {{ fileValidationResult.profile.rows_count }}
+          </p>
+
+          <p class="mb-1">
+            <strong>Période détectée :</strong>
+            {{ fileValidationResult.profile.min_date || '-' }}
+            →
+            {{ fileValidationResult.profile.max_date || '-' }}
+          </p>
+
+          <p class="mb-0">
+            <strong>Total heures détecté :</strong>
+            {{ fileValidationResult.profile.total_hours }} h
+          </p>
+        </div>
+
+        <div
+          class="validation-errors alert alert-danger"
+          *ngIf="fileValidationResult.errors?.length > 0"
+        >
+          <h5 class="fw-bold">Erreurs détectées</h5>
+
+          <ul class="mb-0">
+            <li *ngFor="let error of fileValidationResult.errors">
+              {{ error }}
+            </li>
+          </ul>
+        </div>
+
+        <div
+          class="validation-warnings alert alert-warning mb-0"
+          *ngIf="fileValidationResult.warnings?.length > 0"
+        >
+          <h5 class="fw-bold">Avertissements</h5>
+
+          <ul class="mb-0">
+            <li *ngFor="let warning of fileValidationResult.warnings">
+              {{ warning }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        class="alert mt-3 mb-0"
+        *ngIf="uploadAuditAlert"
+        [ngClass]="{
+          'alert-info': uploadAuditAlert.severity === 'info',
+          'alert-success': uploadAuditAlert.severity === 'success' && uploadAuditAlert.alert_type !== 'same_file',
+          'alert-warning': uploadAuditAlert.severity === 'warning' || uploadAuditAlert.alert_type === 'same_file'
+        }"
+      >
+        <div class="fw-bold fs-5">{{ uploadAuditAlert.title }}</div>
+        
+        <ng-container *ngIf="uploadAuditAlert.alert_type === 'same_file'; else defaultAuditMsg">
+          <p class="mb-2">
+            Ce fichier a déjà été importé et aucune modification n'a été détectée. 
+            Détails de l'import précédent (le {{ uploadAuditAlert.previous_upload?.uploaded_at | date:'dd/MM/yyyy' }}à {{ uploadAuditAlert.previous_upload?.uploaded_at | date:'HH:mm' }}) : 
+            {{ uploadAuditAlert.previous_upload?.profile?.rows_count }} lignes, {{ uploadAuditAlert.previous_upload?.profile?.total_hours }} heures
+          </p>
+        </ng-container>
+        <ng-template #defaultAuditMsg>
+          <p class="mb-2">{{ uploadAuditAlert.message }}</p>
+        </ng-template>
+
+        <div class="row g-2" *ngIf="uploadAuditAlert.diff?.summary">
+          <div class="col-md-4 col-lg-2">
+            <div class="audit-metric">
+              <span>Ancien total</span>
+              <strong>{{ uploadAuditAlert.diff.summary.old_total_hours }} h</strong>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-2">
+            <div class="audit-metric">
+              <span>Nouveau total</span>
+              <strong>{{ uploadAuditAlert.diff.summary.new_total_hours }} h</strong>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-2">
+            <div class="audit-metric">
+              <span>Écart</span>
+              <strong>{{ uploadAuditAlert.diff.summary.total_hours_gap }} h</strong>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-2">
+            <div class="audit-metric">
+              <span>Lignes ajoutées</span>
+              <strong>{{ uploadAuditAlert.diff.summary.added_rows_count }}</strong>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-2">
+            <div class="audit-metric">
+              <span>Lignes supprimées</span>
+              <strong>{{ uploadAuditAlert.diff.summary.removed_rows_count }}</strong>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-2">
+            <div class="audit-metric">
+              <span>Lignes modifiées</span>
+              <strong>{{ uploadAuditAlert.diff.summary.modified_rows_count }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3" *ngIf="uploadAuditAlert.diff?.summary?.by_role_gap?.length > 0">
+          <h6 class="fw-bold">Variation par rôle</h6>
+          <ul class="mb-0">
+            <li *ngFor="let item of uploadAuditAlert.diff.summary.by_role_gap">
+              {{ item.name }} : {{ item.old_hours }} h → {{ item.new_hours }} h
+              ({{ item.gap >= 0 ? '+' : '' }}{{ item.gap }} h)
+            </li>
+          </ul>
+        </div>
+
+        <div class="mt-3" *ngIf="uploadAuditAlert.diff?.summary?.by_author_gap?.length > 0">
+          <h6 class="fw-bold">Variation par auteur</h6>
+          <ul class="mb-0">
+            <li *ngFor="let item of uploadAuditAlert.diff.summary.by_author_gap">
+              {{ item.name }} : {{ item.old_hours }} h → {{ item.new_hours }} h
+              ({{ item.gap >= 0 ? '+' : '' }}{{ item.gap }} h)
+            </li>
+          </ul>
+        </div>
+
+        <div class="mt-3" *ngIf="uploadAuditAlert.diff?.added_rows?.length > 0">
+          <h6 class="fw-bold">Lignes ajoutées détectées</h6>
+          <ul class="mb-0">
+            <li *ngFor="let row of uploadAuditAlert.diff.added_rows">
+              {{ row.Date }} · {{ row.Author }} · {{ row.Role }} · {{ row.Ticket }} ·
+              {{ row.Time_Hours }} h · {{ row.Summary }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="mt-3" *ngIf="uploadAuditAlert.diff?.removed_rows?.length > 0">
+          <h6 class="fw-bold">Lignes supprimées détectées</h6>
+          <ul class="mb-0">
+            <li *ngFor="let row of uploadAuditAlert.diff.removed_rows">
+              {{ row.Date }} · {{ row.Author }} · {{ row.Role }} · {{ row.Ticket }} ·
+              {{ row.Time_Hours }} h · {{ row.Summary }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="mt-3" *ngIf="uploadAuditAlert.diff?.modified_rows?.length > 0">
+          <h6 class="fw-bold">Lignes modifiées détectées</h6>
+          <ul class="mb-0">
+            <li *ngFor="let row of uploadAuditAlert.diff.modified_rows">
+              {{ row.row_key }}
+              <span *ngIf="row.changes?.Time_Hours">
+                · heures : {{ row.changes.Time_Hours.old }} → {{ row.changes.Time_Hours.new }}
+              </span>
+              <span *ngIf="row.changes?.Summary"> · résumé modifié</span>
+              <span *ngIf="row.changes?.Role">
+                · rôle : {{ row.changes.Role.old }} → {{ row.changes.Role.new }}
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4" *ngIf="monthlyCalculationResult">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div>
+        <strong>Résultat du dernier calcul</strong>
+        <span class="badge ms-2" [ngClass]="getComparisonStatusClass()">
+          {{ getComparisonStatusLabel() }}
+        </span>
+      </div>
+      <button class="btn btn-sm btn-success" (click)="downloadReport()" [disabled]="!monthlyCalculationResult?.upload?.upload_id">
+        <i class="bi bi-file-earmark-excel me-1"></i> Télécharger Rapport Excel
+      </button>
+    </div>
+
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="metric-box">
+            <span>Mois</span>
+            <strong>{{ monthlyCalculationResult?.result?.month }}</strong>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="metric-box">
+            <span>Période analysée</span>
+            <strong>{{ monthlyStartDate }} → {{ monthlyEndDate }}</strong>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="metric-box">
+            <span>Résultat</span>
+            <strong>
+              {{ monthlyCalculationResult?.result?.value }}
+              {{ monthlyCalculationResult?.result?.unit }}
+            </strong>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="metric-box">
+            <span>Total MD</span>
+            <strong>{{ monthlyCalculationResult?.result?.total_md }}</strong>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="monthlyCalculationResult?.target">
+          <div class="metric-box">
+            <span>Target</span>
+            <strong>
+              {{ monthlyCalculationResult?.target?.target_value }}
+              {{ monthlyCalculationResult?.target?.unit }}
+            </strong>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="monthlyCalculationResult?.comparison">
+          <div class="metric-box">
+            <span>Écart</span>
+            <strong
+              [class.text-success]="monthlyCalculationResult?.comparison?.gap >= 0"
+              [class.text-danger]="monthlyCalculationResult?.comparison?.gap < 0"
+            >
+              {{ monthlyCalculationResult?.comparison?.gap }}
+            </strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-4" />
+
+  <h4 class="mb-4">Historique & Targets</h4>
+
+  <div class="alert alert-success" *ngIf="targetsSuccessMessage">{{ targetsSuccessMessage }}</div>
+  <div class="alert alert-danger" *ngIf="targetsErrorMessage">{{ targetsErrorMessage }}</div>
+  <div class="alert alert-info" *ngIf="isLoadingTargets">Chargement des résultats et targets mensuels...</div>
+
+  <div class="row g-4 mb-4" *ngIf="!isLoadingTargets">
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header"><strong>KPI Results</strong></div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-striped mb-0">
+              <thead>
+                <tr>
+                  <th>Compilation Date</th>
+                  <th>Value</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of getMonthlyResultRows()">
+                  <td>{{ formatCompilationDate(row.compilation_date) }}</td>
+                  <td>{{ getResultValue(row) }}</td>
+                  <td><span class="badge bg-info">{{ row.type || 'Result' }}</span></td>
+                </tr>
+                <tr *ngIf="getMonthlyResultRows().length === 0">
+                  <td colspan="3" class="text-center text-muted">Aucun résultat mensuel disponible.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header"><strong>KPI Targets</strong></div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-striped mb-0">
+              <thead>
+                <tr>
+                  <th>Compilation Date</th>
+                  <th>Value</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of getMonthlyTargetRows()">
+                  <td>{{ formatCompilationDate(row.compilation_date) }}</td>
+                  <td>
+                    <input class="form-control form-control-sm" type="number" [(ngModel)]="row.target_value" />
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-action refresh btn-sm"
+                      type="button"
+                      (click)="refreshTargetAndRecalculate(row)"
+                      [disabled]="isRecalculatingTargets"
+                    >
+                      <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="getMonthlyTargetRows().length === 0">
+                  <td colspan="3" class="text-center text-muted">Aucun target mensuel disponible.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-4 mb-4" *ngIf="monthlyComparisonRows.length > 0">
+    <div class="card-header">
+      <strong>Comparaison mensuelle Result vs Target</strong>
+    </div>
+    <div class="card-body">
+      <div class="row g-4">
+        <div class="col-lg-7">
+          <div class="table-responsive">
+            <table class="table table-striped mb-0">
+              <thead>
+                <tr>
+                  <th>Mois</th>
+                  <th>KPI</th>
+                  <th>Result</th>
+                  <th>Target</th>
+                  <th>Écart</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of monthlyComparisonRows">
+                  <td>{{ row.month }}</td>
+                  <td>{{ row.kpi_name }}</td>
+                  <td>{{ row.result_value }} {{ row.unit }}</td>
+                  <td>{{ row.target_value !== null ? row.target_value + ' ' + row.unit : '-' }}</td>
+                  <td
+                    [class.text-success]="row.gap !== null && row.gap >= 0"
+                    [class.text-danger]="row.gap !== null && row.gap < 0"
+                  >
+                    {{ row.gap !== null ? row.gap : '-' }}
+                  </td>
+                  <td>
+                    <span class="badge" [class.bg-success]="row.achieved" [class.bg-danger]="!row.achieved">
+                      {{ row.achieved ? 'Atteint' : 'Non atteint' }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <h5 class="text-warning mb-3">Diagramme Result vs Target</h5>
+          <div class="chart-wrapper">
+            <canvas #monthlyComparisonCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

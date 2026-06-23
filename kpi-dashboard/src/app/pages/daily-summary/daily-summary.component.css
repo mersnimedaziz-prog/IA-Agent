@@ -1,0 +1,14 @@
+.badge-success {
+  background-color: rgba(39, 174, 96, 0.15);
+  color: #166534;
+}
+
+.badge-warning {
+  background-color: rgba(243, 156, 18, 0.15);
+  color: #92400e;
+}
+
+.badge-danger {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: #991b1b;
+}
