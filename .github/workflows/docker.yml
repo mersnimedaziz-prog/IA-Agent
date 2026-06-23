@@ -1,0 +1,35 @@
+name: Docker CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image
+        run: |
+          docker build -t stage-ia-backend ./backend
+
+      - name: Build frontend image
+        run: |
+          docker build -t stage-ia-frontend ./kpi-dashboard
+
+      - name: Validate docker compose
+        run: |
+          docker compose config

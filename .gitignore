@@ -1,0 +1,23 @@
+# Python
+backend/.venv/
+backend/__pycache__/
+backend/*.pyc
+
+# Data
+backend/data/monthly/imports/
+backend/data/monthly/active_monthly_data.xlsx
+
+# Angular
+kpi-dashboard/node_modules/
+kpi-dashboard/dist/
+kpi-dashboard/.angular/
+
+# Docker
+*.log
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
