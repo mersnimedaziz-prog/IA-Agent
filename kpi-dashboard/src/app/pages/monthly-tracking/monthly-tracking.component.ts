@@ -446,6 +446,13 @@ export class MonthlyTrackingComponent implements OnInit, AfterViewInit {
     });
   }
 
+    getResultForTarget(targetRow: any): any {
+    return this.monthlyResults.find((r: any) => 
+      r.month === targetRow.month && 
+      r.kpi_name === targetRow.kpi_name
+    );
+  }
+
   getMonthlyTargetRows(): any[] {
     return [...this.monthlyTargets].sort((a: any, b: any) => {
       return new Date(a.compilation_date).getTime() - new Date(b.compilation_date).getTime();
@@ -606,50 +613,99 @@ export class MonthlyTrackingComponent implements OnInit, AfterViewInit {
     const resultData = this.monthlyComparisonRows.map((row: any) => row.result_value);
     const targetData = this.monthlyComparisonRows.map((row: any) => row.target_value || 0);
 
-    this.monthlyComparisonChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Result',
-            data: resultData,
-            backgroundColor: '#3b82f6',
-            borderColor: '#1d4ed8',
-            borderWidth: 1,
-            borderRadius: 8
-          },
-          {
-            label: 'Target',
-            data: targetData,
-            backgroundColor: '#f97316',
-            borderColor: '#c2410c',
-            borderWidth: 1,
-            borderRadius: 8
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: true
-          },
-          title: {
-            display: false
-          }
+      this.monthlyComparisonChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Actual',
+              data: resultData,
+              backgroundColor: 'rgba(241, 179, 18, 0.85)',
+              borderColor: '#f1b312',
+              borderWidth: 1,
+              borderRadius: 6,
+              hoverBackgroundColor: '#f1b312'
+            },
+            {
+              label: 'Target',
+              data: targetData,
+              backgroundColor: 'rgba(77, 179, 128, 0.85)',
+              borderColor: '#4db380',
+              borderWidth: 1,
+              borderRadius: 6,
+              hoverBackgroundColor: '#4db380'
+            }
+          ]
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                usePointStyle: true,
+                padding: 20,
+                font: {
+                  family: "'Segoe UI', Roboto, sans-serif",
+                  size: 13,
+                  weight: 'normal'
+                }
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              titleColor: '#1a1a2e',
+              bodyColor: '#475569',
+              borderColor: '#e5e7eb',
+              borderWidth: 1,
+              padding: 12,
+              boxPadding: 6,
+              usePointStyle: true,
+              titleFont: { size: 14, weight: 'bold' },
+              bodyFont: { size: 13 }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              border: {
+                display: false,
+                dash: [5, 5]
+              },
+              grid: {
+                color: '#f1f5f9'
+              },
+              ticks: {
+                color: '#64748b',
+                font: { size: 12 },
+                precision: 0
+              }
+            },
+            x: {
+              border: {
+                display: false
+              },
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#64748b',
+                font: { size: 12, weight: 'normal' }
+              }
             }
           }
         }
-      }
-    });
+      });
   }
 
   getFirstDayOfMonth(month: string): string {

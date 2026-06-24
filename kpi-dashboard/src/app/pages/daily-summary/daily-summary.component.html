@@ -1,49 +1,54 @@
-<section>
+<section class="container-fluid py-4">
   <app-page-header
     title="Résumé par journée"
     icon="bi-calendar-day"
     color="warning"
   ></app-page-header>
 
-  <p class="page-description mb-4">
-    Analysez les heures et les activités principales réalisées chaque jour
-    à partir de la colonne Summary du fichier Jira mensuel.
-  </p>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <p class="page-description mb-0 text-muted">
+      Analysez les heures et les activités principales réalisées chaque jour
+      à partir de la colonne Summary du fichier Jira mensuel.
+    </p>
+  </div>
 
-  <div class="card mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>Filtres</strong>
-      <button class="btn btn-sm btn-outline-secondary" (click)="showFilters = !showFilters">
+  <!-- Filtres Horizontal Bar -->
+  <div class="card mb-4 border-0 shadow-sm rounded-4">
+    <div class="card-header d-flex justify-content-between align-items-center border-0 bg-transparent pt-4 pb-2">
+      <h5 class="fw-bold mb-0 text-dark">Configuration des filtres</h5>
+      <button class="btn btn-sm btn-light border" (click)="showFilters = !showFilters">
         <i class="bi" [ngClass]="showFilters ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-        {{ showFilters ? 'Cacher les filtres' : 'Afficher les filtres' }}
+        {{ showFilters ? 'Cacher' : 'Afficher' }}
       </button>
     </div>
+
     <div class="card-body" *ngIf="showFilters">
       <div class="row g-3 align-items-end">
-        <div class="col-md-2">
-          <label class="form-label">Mois</label>
-          <input class="form-control" type="month" [(ngModel)]="month" (change)="updateDateRangeFromMonth()" />
+        <div class="col-xl-2 col-md-6">
+          <label class="form-label text-muted small fw-bold">Mois</label>
+          <input class="form-control form-control-sm" type="month" [(ngModel)]="month" (change)="updateDateRangeFromMonth()" />
         </div>
-        <div class="col-md-2">
-          <label class="form-label">Date début</label>
-          <input class="form-control" type="date" [(ngModel)]="startDate" />
+        <div class="col-xl-2 col-md-6">
+          <label class="form-label text-muted small fw-bold">Date début</label>
+          <input class="form-control form-control-sm" type="date" [(ngModel)]="startDate" />
         </div>
-        <div class="col-md-2">
-          <label class="form-label">Date fin</label>
-          <input class="form-control" type="date" [(ngModel)]="endDate" />
+        <div class="col-xl-2 col-md-6">
+          <label class="form-label text-muted small fw-bold">Date fin</label>
+          <input class="form-control form-control-sm" type="date" [(ngModel)]="endDate" />
         </div>
-        <div class="col-md-4">
-          <label class="form-label">Fichier source</label>
-          <select class="form-select" [(ngModel)]="selectedUploadId">
+        <div class="col-xl-4 col-md-6">
+          <label class="form-label text-muted small fw-bold">Fichier source</label>
+          <select class="form-select form-select-sm" [(ngModel)]="selectedUploadId">
             <option *ngIf="monthlyUploads.length === 0" value="">Aucun fichier disponible</option>
             <option *ngFor="let upload of monthlyUploads" [value]="upload.upload_id">
               {{ upload.original_filename }} ({{ upload.uploaded_at | date:'dd/MM/yyyy HH:mm' }})
             </option>
           </select>
         </div>
-        <div class="col-md-2">
-          <button class="btn btn-primary w-100" type="button" (click)="loadDailySummary()" [disabled]="isLoading || !selectedUploadId">
-            {{ isLoading ? 'Analyse en cours...' : 'Appliquer le filtre' }}
+        <div class="col-xl-2 col-md-12 text-end">
+          <button class="btn btn-primary btn-sm w-100" type="button" (click)="loadDailySummary()" [disabled]="isLoading || !selectedUploadId">
+            <i class="bi bi-funnel-fill me-1"></i>
+            {{ isLoading ? 'Analyse...' : 'Appliquer' }}
           </button>
         </div>
       </div>
@@ -54,62 +59,98 @@
     Veuillez uploader un fichier Jira mensuel dans la page "Monthly Tracking & Targets" pour voir l'analyse.
   </div>
   <div class="alert alert-warning mt-3" *ngIf="!selectedUploadId && monthlyUploads.length > 0">
-    Veuillez sélectionner un fichier source avant d’appliquer le filtre.
+    Veuillez sélectionner un fichier source avant d'appliquer le filtre.
   </div>
 
   <div class="alert alert-success mt-3" *ngIf="successMessage">{{ successMessage }}</div>
   <div class="alert alert-danger mt-3" *ngIf="errorMessage">{{ errorMessage }}</div>
   <div class="alert alert-info" *ngIf="isLoading">Chargement du résumé par journée...</div>
 
-  <div class="row g-3 mb-4" *ngIf="!isLoading">
-    <div class="col-md-3"><div class="metric-box"><span>Période</span><strong>{{ startDate }} → {{ endDate }}</strong></div></div>
-    <div class="col-md-3"><div class="metric-box"><span>Total heures</span><strong>{{ totalHours }} h</strong></div></div>
-    <div class="col-md-3"><div class="metric-box"><span>Total MD</span><strong>{{ totalMd }}</strong></div></div>
-    <div class="col-md-3"><div class="metric-box"><span>Jours analysés</span><strong>{{ totalDays }}</strong></div></div>
-  </div>
-
-  <div class="card mb-4" *ngIf="!isLoading && dailySummary.length > 0">
-    <div class="card-header"><strong>Évolution du Throughput Quotidien</strong></div>
-    <div class="card-body">
-      <div style="height: 400px; width: 100%;">
-        <canvas #throughputCanvas></canvas>
+  <!-- KPI Cards -->
+  <div class="row g-4 mb-4" *ngIf="!isLoading && startDate && endDate">
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card">
+        <div class="kpi-label">Période</div>
+        <div class="kpi-value text-dark" style="font-size: 1.1rem;">{{ startDate }} → {{ endDate }}</div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card">
+        <div class="kpi-label">Total heures</div>
+        <div class="kpi-value text-primary">{{ totalHours }} <span class="text-muted" style="font-size: 0.9rem;">h</span></div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card">
+        <div class="kpi-label">Total MD</div>
+        <div class="kpi-value text-dark">{{ totalMd }}</div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card">
+        <div class="kpi-label">Jours analysés</div>
+        <div class="kpi-value text-success">{{ totalDays }}</div>
       </div>
     </div>
   </div>
 
-  <div class="card" *ngIf="!isLoading && dailySummary.length > 0">
-    <div class="card-header"><strong>Tableau détaillé par journée</strong></div>
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-striped mb-0">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Total heures</th>
-              <th>Total MD</th>
-              <th>Statut charge</th>
-              <th>Activités principales</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of dailySummary">
-              <td>{{ row.Date }}</td>
-              <td>{{ row.Total_Hours }} h</td>
-              <td>{{ row.Total_MD }}</td>
-              <td><span class="badge" [ngClass]="getDayStatusClass(row)">{{ getDayStatus(row) }}</span></td>
-              <td>
-                <ul class="mb-0">
-                  <li *ngFor="let item of getActivityList(row)">{{ item }}</li>
-                </ul>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+  <hr class="my-5" *ngIf="!isLoading && dailySummary.length > 0" />
+
+  <!-- Historique des Performances (Table + Chart) -->
+  <div class="row justify-content-center" *ngIf="!isLoading && dailySummary.length > 0">
+    <div class="col-xl-10 col-lg-12">
+      
+      <!-- Chart Row (On top) -->
+      <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+          <h5 class="fw-bold text-dark mb-4 text-center">Évolution du Throughput Quotidien</h5>
+          <div class="chart-wrapper mx-auto w-100" style="height: 280px;">
+            <canvas #throughputCanvas></canvas>
+          </div>
+        </div>
       </div>
+
+      <!-- Data Table Row (On bottom) -->
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+          <div class="enterprise-table-container">
+            <table class="enterprise-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Total heures</th>
+                  <th>Total MD</th>
+                  <th class="text-center">Statut charge</th>
+                  <th>Activités principales</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of dailySummary">
+                  <td class="fw-bold">{{ row.Date }}</td>
+                  <td class="fw-bold">{{ row.Total_Hours }} <span class="text-muted fw-normal small">h</span></td>
+                  <td class="fw-bold">{{ row.Total_MD }}</td>
+                  <td class="text-center">
+                    <span class="badge" [ngClass]="getDayStatusClass(row)">{{ getDayStatus(row) }}</span>
+                  </td>
+                  <td>
+                    <ul class="mb-0 text-muted small" style="padding-left: 1rem;">
+                      <li *ngFor="let item of getActivityList(row)">{{ item }}</li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div class="alert alert-warning" *ngIf="!isLoading && dailySummary.length === 0">
+  <div class="alert alert-warning" *ngIf="!isLoading && dailySummary.length === 0 && selectedUploadId">
     Aucun résumé journalier disponible pour cette période.
   </div>
 </section>

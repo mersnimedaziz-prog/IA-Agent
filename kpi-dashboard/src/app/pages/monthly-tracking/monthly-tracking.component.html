@@ -1,4 +1,4 @@
-<section>
+<section class="container-fluid py-4">
   <app-page-header
     title="Suivi Mensuel & Targets"
     icon="bi-calendar-month"
@@ -6,102 +6,56 @@
   ></app-page-header>
 
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <p class="page-description mb-0">
+    <p class="page-description mb-0 text-muted">
       Importez un fichier Jira mensuel, choisissez une période, définissez un objectif,
       puis calculez et comparez le résultat du KPI.
     </p>
   </div>
 
-  <div class="card mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <strong>Import & calcul</strong>
-      <button class="btn btn-sm btn-outline-secondary" (click)="showFilters = !showFilters">
+  <div class="card mb-4 border-0 shadow-sm rounded-4">
+    <div class="card-header d-flex justify-content-between align-items-center border-0 bg-transparent pt-4 pb-2">
+      <h5 class="fw-bold mb-0 text-dark">Configuration de l'import</h5>
+      <button class="btn btn-sm btn-light border" (click)="showFilters = !showFilters">
         <i class="bi" [ngClass]="showFilters ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-        {{ showFilters ? 'Cacher les options' : 'Afficher les options' }}
+        {{ showFilters ? 'Cacher' : 'Afficher' }}
       </button>
     </div>
 
     <div class="card-body" *ngIf="showFilters">
-      <div class="row g-3">
-        <div class="col-12">
-          <label class="form-label">Fichier Jira mensuel</label>
-          <input
-            class="form-control"
-            type="file"
-            accept=".xlsx,.xls"
-            (change)="onMonthlyFileSelected($event)"
-          />
+      <div class="row g-3 align-items-end">
+        <div class="col-xl-3 col-md-6">
+          <label class="form-label text-muted small fw-bold">Fichier Jira mensuel</label>
+          <input class="form-control form-control-sm" type="file" accept=".xlsx,.xls" (change)="onMonthlyFileSelected($event)" />
         </div>
-
-        <div class="col-md-4">
-          <label class="form-label">Mois</label>
-          <input
-            class="form-control"
-            type="month"
-            [(ngModel)]="monthlyMonth"
-            (change)="updateMonthlyDateRangeFromMonth()"
-          />
+        <div class="col-xl-2 col-md-6">
+          <label class="form-label text-muted small fw-bold">Mois</label>
+          <input class="form-control form-control-sm" type="month" [(ngModel)]="monthlyMonth" (change)="updateMonthlyDateRangeFromMonth()" />
         </div>
-
-        <div class="col-md-4">
-          <label class="form-label">Date début</label>
-          <input
-            class="form-control"
-            type="date"
-            [(ngModel)]="monthlyStartDate"
-          />
+        <div class="col-xl-2 col-md-6">
+          <label class="form-label text-muted small fw-bold">Date début</label>
+          <input class="form-control form-control-sm" type="date" [(ngModel)]="monthlyStartDate" />
         </div>
-
-        <div class="col-md-4">
-          <label class="form-label">Date fin</label>
-          <input
-            class="form-control"
-            type="date"
-            [(ngModel)]="monthlyEndDate"
-          />
+        <div class="col-xl-2 col-md-6">
+          <label class="form-label text-muted small fw-bold">Date fin</label>
+          <input class="form-control form-control-sm" type="date" [(ngModel)]="monthlyEndDate" />
         </div>
-
-        <div class="col-md-6">
-          <label class="form-label">KPI</label>
-          <select class="form-select" [(ngModel)]="monthlyKpiName">
-            <option value="monthly_total_hours">
-              Total Heures (monthly_total_hours)
-            </option>
-          </select>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label">Objectif Target</label>
-          <input
-            class="form-control"
-            type="number"
-            [(ngModel)]="monthlyTargetValue"
-          />
-        </div>
-
-        <div class="col-12">
-          <button
-            class="btn btn-primary"
-            type="button"
-            (click)="uploadAndCalculateMonthlyKpi()"
-            [disabled]="isMonthlyUploading || isMonthlyCalculating"
-          >
-            {{
-              isMonthlyUploading
-                ? 'Import mensuel...'
-                : isMonthlyCalculating
-                  ? 'Calcul mensuel...'
-                  : 'Importer, calculer et sauvegarder'
-            }}
-          </button>
+        <div class="col-xl-3 col-md-12">
+          <label class="form-label text-muted small fw-bold">Objectif Target</label>
+          <div class="d-flex" style="gap: 10px;">
+            <input class="form-control form-control-sm" type="number" [(ngModel)]="monthlyTargetValue" />
+            <button class="btn btn-primary btn-sm flex-shrink-0" type="button" (click)="uploadAndCalculateMonthlyKpi()" [disabled]="isMonthlyUploading || isMonthlyCalculating">
+              <i class="bi bi-cloud-upload me-1"></i>
+              {{ isMonthlyUploading ? 'Import...' : isMonthlyCalculating ? 'Calcul...' : 'Calculer' }}
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="alert alert-success mt-3 mb-0" *ngIf="monthlyUploadMessage">
+      <div class="alert alert-success mt-3 mb-0 py-2" *ngIf="monthlyUploadMessage">
         {{ monthlyUploadMessage }}
       </div>
 
-      <div class="alert alert-danger mt-3 mb-0" *ngIf="monthlyErrorMessage">
+      <div class="alert alert-danger mt-3 mb-0 py-2" *ngIf="monthlyErrorMessage">
         {{ monthlyErrorMessage }}
       </div>
 
@@ -184,7 +138,7 @@
         <ng-container *ngIf="uploadAuditAlert.alert_type === 'same_file'; else defaultAuditMsg">
           <p class="mb-2">
             Ce fichier a déjà été importé et aucune modification n'a été détectée. 
-            Détails de l'import précédent (le {{ uploadAuditAlert.previous_upload?.uploaded_at | date:'dd/MM/yyyy' }}à {{ uploadAuditAlert.previous_upload?.uploaded_at | date:'HH:mm' }}) : 
+            Détails de l'import précédent (le {{ uploadAuditAlert.previous_upload?.uploaded_at | date:'dd/MM/yyyy' }} à {{ uploadAuditAlert.previous_upload?.uploaded_at | date:'HH:mm' }}) : 
             {{ uploadAuditAlert.previous_upload?.profile?.rows_count }} lignes, {{ uploadAuditAlert.previous_upload?.profile?.total_hours }} heures
           </p>
         </ng-container>
@@ -290,198 +244,118 @@
     </div>
   </div>
 
-  <div class="card mb-4" *ngIf="monthlyCalculationResult">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <div>
-        <strong>Résultat du dernier calcul</strong>
-        <span class="badge ms-2" [ngClass]="getComparisonStatusClass()">
-          {{ getComparisonStatusLabel() }}
-        </span>
-      </div>
-      <button class="btn btn-sm btn-success" (click)="downloadReport()" [disabled]="!monthlyCalculationResult?.upload?.upload_id">
-        <i class="bi bi-file-earmark-excel me-1"></i> Télécharger Rapport Excel
+  <!-- Résultat du dernier calcul (KPI Cards) -->
+  <div class="row g-4 mb-4" *ngIf="monthlyCalculationResult">
+    <div class="col-12 d-flex justify-content-between align-items-center mb-2 mt-2">
+      <h5 class="fw-bold text-dark mb-0">Dernier Calcul</h5>
+      <button class="btn btn-sm btn-outline-success" (click)="downloadReport()" [disabled]="!monthlyCalculationResult?.upload?.upload_id">
+        <i class="bi bi-file-earmark-excel me-1"></i> Exporter
       </button>
     </div>
-
-    <div class="card-body">
-      <div class="row g-3">
-        <div class="col-md-4">
-          <div class="metric-box">
-            <span>Mois</span>
-            <strong>{{ monthlyCalculationResult?.result?.month }}</strong>
-          </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card">
+        <div class="kpi-label">Période Analysée</div>
+        <div class="kpi-value text-dark" style="font-size: 1.1rem;">{{ monthlyCalculationResult?.result?.month }}</div>
+        <div class="text-muted small">{{ monthlyStartDate }} → {{ monthlyEndDate }}</div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card">
+        <div class="kpi-label">Objectif Target</div>
+        <div class="kpi-value text-primary">{{ monthlyCalculationResult?.target?.target_value || '-' }} <span class="fs-6 text-muted">{{ monthlyCalculationResult?.target?.unit }}</span></div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card">
+        <div class="kpi-label">Résultat Actuel</div>
+        <div class="kpi-value text-dark">{{ monthlyCalculationResult?.result?.value }} <span class="fs-6 text-muted">{{ monthlyCalculationResult?.result?.unit }}</span></div>
+        <div class="text-muted small">Total MD: {{ monthlyCalculationResult?.result?.total_md }}</div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="kpi-card">
+        <div class="kpi-label">Variance</div>
+        <div class="kpi-value" [class.text-success]="monthlyCalculationResult?.comparison?.gap >= 0" [class.text-danger]="monthlyCalculationResult?.comparison?.gap < 0">
+          {{ monthlyCalculationResult?.comparison?.gap > 0 ? '+' : '' }}{{ monthlyCalculationResult?.comparison?.gap || '-' }} <span class="fs-6 text-muted">{{ monthlyCalculationResult?.target?.unit }}</span>
         </div>
-        <div class="col-md-4">
-          <div class="metric-box">
-            <span>Période analysée</span>
-            <strong>{{ monthlyStartDate }} → {{ monthlyEndDate }}</strong>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="metric-box">
-            <span>Résultat</span>
-            <strong>
-              {{ monthlyCalculationResult?.result?.value }}
-              {{ monthlyCalculationResult?.result?.unit }}
-            </strong>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="metric-box">
-            <span>Total MD</span>
-            <strong>{{ monthlyCalculationResult?.result?.total_md }}</strong>
-          </div>
-        </div>
-        <div class="col-md-4" *ngIf="monthlyCalculationResult?.target">
-          <div class="metric-box">
-            <span>Target</span>
-            <strong>
-              {{ monthlyCalculationResult?.target?.target_value }}
-              {{ monthlyCalculationResult?.target?.unit }}
-            </strong>
-          </div>
-        </div>
-        <div class="col-md-4" *ngIf="monthlyCalculationResult?.comparison">
-          <div class="metric-box">
-            <span>Écart</span>
-            <strong
-              [class.text-success]="monthlyCalculationResult?.comparison?.gap >= 0"
-              [class.text-danger]="monthlyCalculationResult?.comparison?.gap < 0"
-            >
-              {{ monthlyCalculationResult?.comparison?.gap }}
-            </strong>
-          </div>
+        <div class="text-muted small mt-1">
+          <span class="badge" [ngClass]="getComparisonStatusClass()">{{ getComparisonStatusLabel() }}</span>
         </div>
       </div>
     </div>
   </div>
 
-  <hr class="my-4" />
+  <hr class="my-5" *ngIf="monthlyComparisonRows.length > 0" />
 
-  <h4 class="mb-4">Historique & Targets</h4>
-
-  <div class="alert alert-success" *ngIf="targetsSuccessMessage">{{ targetsSuccessMessage }}</div>
-  <div class="alert alert-danger" *ngIf="targetsErrorMessage">{{ targetsErrorMessage }}</div>
-  <div class="alert alert-info" *ngIf="isLoadingTargets">Chargement des résultats et targets mensuels...</div>
-
-  <div class="row g-4 mb-4" *ngIf="!isLoadingTargets">
-    <div class="col-lg-6">
-      <div class="card h-100">
-        <div class="card-header"><strong>KPI Results</strong></div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-striped mb-0">
-              <thead>
-                <tr>
-                  <th>Compilation Date</th>
-                  <th>Value</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of getMonthlyResultRows()">
-                  <td>{{ formatCompilationDate(row.compilation_date) }}</td>
-                  <td>{{ getResultValue(row) }}</td>
-                  <td><span class="badge bg-info">{{ row.type || 'Result' }}</span></td>
-                </tr>
-                <tr *ngIf="getMonthlyResultRows().length === 0">
-                  <td colspan="3" class="text-center text-muted">Aucun résultat mensuel disponible.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+  <!-- Historique & Targets -->
+  <div class="row justify-content-center" *ngIf="monthlyComparisonRows.length > 0 || isLoadingTargets || targetsSuccessMessage || targetsErrorMessage">
+    <div class="col-xl-10 col-lg-12">
+      <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+          <h4 class="fw-bold text-dark mb-1">Historique des Performances</h4>
+          <p class="text-muted mb-0 small">Analyse comparative des résultats réels vs cibles</p>
         </div>
       </div>
-    </div>
+      
+      <div class="alert alert-success" *ngIf="targetsSuccessMessage">{{ targetsSuccessMessage }}</div>
+      <div class="alert alert-danger" *ngIf="targetsErrorMessage">{{ targetsErrorMessage }}</div>
+      <div class="alert alert-info" *ngIf="isLoadingTargets">Chargement des résultats et targets mensuels...</div>
 
-    <div class="col-lg-6">
-      <div class="card h-100">
-        <div class="card-header"><strong>KPI Targets</strong></div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-striped mb-0">
-              <thead>
-                <tr>
-                  <th>Compilation Date</th>
-                  <th>Value</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of getMonthlyTargetRows()">
-                  <td>{{ formatCompilationDate(row.compilation_date) }}</td>
-                  <td>
-                    <input class="form-control form-control-sm" type="number" [(ngModel)]="row.target_value" />
-                  </td>
-                  <td>
-                    <button
-                      class="btn btn-action refresh btn-sm"
-                      type="button"
-                      (click)="refreshTargetAndRecalculate(row)"
-                      [disabled]="isRecalculatingTargets"
-                    >
-                      <i class="bi bi-arrow-clockwise"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr *ngIf="getMonthlyTargetRows().length === 0">
-                  <td colspan="3" class="text-center text-muted">Aucun target mensuel disponible.</td>
-                </tr>
-              </tbody>
-            </table>
+      <div *ngIf="monthlyComparisonRows.length > 0">
+        <!-- Data Table Row (Now on top) -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+          <div class="card-body p-0">
+            <div class="enterprise-table-container">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Mois</th>
+                    <th>KPI</th>
+                    <th class="text-center">Cible (Target)</th>
+                    <th>Résultat (Actual)</th>
+                    <th>Écart (Variance)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of monthlyComparisonRows">
+                    <td class="fw-bold">{{ row.month }}</td>
+                    <td><span class="badge badge-neutral rounded-pill">{{ row.kpi_name || 'Result' }}</span></td>
+                    <td>
+                      <div class="d-flex align-items-center justify-content-center" style="gap: 8px;">
+                        <input class="table-input form-control form-control-sm text-center" style="width: 80px;" type="number" [(ngModel)]="row.target_value" placeholder="---" />
+                        <button class="table-action-btn" type="button" (click)="refreshTargetAndRecalculate(row)" [disabled]="isRecalculatingTargets" title="Mettre à jour">
+                          <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                      </div>
+                    </td>
+                    <td class="fw-bold">{{ row.result_value }} <span class="text-muted fw-normal small">{{ row.unit }}</span></td>
+                    <td>
+                      <span class="status-dot" [class.dot-success]="row.gap !== null && row.gap >= 0" [class.dot-danger]="row.gap !== null && row.gap < 0"></span>
+                      <span class="fw-bold" [class.text-success]="row.gap !== null && row.gap >= 0" [class.text-danger]="row.gap !== null && row.gap < 0">
+                        {{ row.gap !== null ? (row.gap > 0 ? '+' : '') + row.gap : '-' }}
+                      </span>
+                      <span class="text-muted small" *ngIf="row.gap !== null"> {{ row.unit }}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="card mt-4 mb-4" *ngIf="monthlyComparisonRows.length > 0">
-    <div class="card-header">
-      <strong>Comparaison mensuelle Result vs Target</strong>
-    </div>
-    <div class="card-body">
-      <div class="row g-4">
-        <div class="col-lg-7">
-          <div class="table-responsive">
-            <table class="table table-striped mb-0">
-              <thead>
-                <tr>
-                  <th>Mois</th>
-                  <th>KPI</th>
-                  <th>Result</th>
-                  <th>Target</th>
-                  <th>Écart</th>
-                  <th>Statut</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of monthlyComparisonRows">
-                  <td>{{ row.month }}</td>
-                  <td>{{ row.kpi_name }}</td>
-                  <td>{{ row.result_value }} {{ row.unit }}</td>
-                  <td>{{ row.target_value !== null ? row.target_value + ' ' + row.unit : '-' }}</td>
-                  <td
-                    [class.text-success]="row.gap !== null && row.gap >= 0"
-                    [class.text-danger]="row.gap !== null && row.gap < 0"
-                  >
-                    {{ row.gap !== null ? row.gap : '-' }}
-                  </td>
-                  <td>
-                    <span class="badge" [class.bg-success]="row.achieved" [class.bg-danger]="!row.achieved">
-                      {{ row.achieved ? 'Atteint' : 'Non atteint' }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <!-- Chart Row (Now at the bottom) -->
+        <div class="card border-0 shadow-sm rounded-4">
+          <div class="card-body p-4">
+            <div class="chart-wrapper mx-auto w-100" style="height: 280px;">
+              <canvas #monthlyComparisonCanvas></canvas>
+            </div>
           </div>
         </div>
-        <div class="col-lg-5">
-          <h5 class="text-warning mb-3">Diagramme Result vs Target</h5>
-          <div class="chart-wrapper">
-            <canvas #monthlyComparisonCanvas></canvas>
-          </div>
-        </div>
+
       </div>
     </div>
   </div>

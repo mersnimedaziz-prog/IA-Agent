@@ -1,13 +1,18 @@
 $info: #3498db;
 
 .navbar {
-  padding: 0.75rem 1.5rem;
+  padding: 0.4rem 1.5rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 
+  .navbar-brand {
+    font-size: 1.15rem;
+  }
+
   .nav-link {
+    font-size: 0.9rem;
     font-weight: 500;
     color: rgba(white, 0.85) !important;
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 4px;
     transition: 0.2s;
 
@@ -26,7 +31,8 @@ $info: #3498db;
   .btn-action {
     background-color: rgba(white, 0.05);
     border: 1px solid rgba(white, 0.1);
-    padding: 0.4rem 1rem;
+    padding: 0.25rem 0.8rem;
+    font-size: 0.9rem;
     border-radius: 20px;
     font-weight: 500;
     transition: all 0.2s ease;
